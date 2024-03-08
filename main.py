@@ -21,9 +21,7 @@ def export(input_dir, output_dir, frame_step):
 
             if frame_count % frame_step == 0:
                 frame_filename = os.path.join(output_dir, f'{video_number}_{frame_count}.jpg')
-                height, width, _ = frame.shape
-                roi = frame[height // 4:3 * height // 4, width // 4:3 * width // 4]
-                cv2.imwrite(frame_filename, roi)
+                cv2.imwrite(frame_filename, frame)
                 frame = cv2.resize(frame, (1280, 720))
                 cv2.imshow('Frame', frame)
             
@@ -53,7 +51,7 @@ def main():
     parser.add_argument("--frame", required=True, help="frame step)")
     args = parser.parse_args()
     videos_path = args.videos
-    frame_rate = args.frame 
+    frame_rate = args.frame
     frame_rate_dir = {
         'high': 1,
         'good': 2,
@@ -63,7 +61,7 @@ def main():
     if not os.path.exists(videos_path):
         print(f"Error: Videos directory '{videos_path}' does not exist.")
         return
-    if not os.path.exists(frame_rate) or frame_rate not in frame_rate_dir:
+    if frame_rate not in frame_rate_dir:
         print(f"Error: frame rate '{frame_rate}' does not exist.")
         print("Follow these:")
         print('\n'.join([f"--frame {key}" for key in frame_rate_dir.keys()]))
